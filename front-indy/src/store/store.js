@@ -1,15 +1,13 @@
-
 import Vue from 'vue'
 import Vuex from 'vuex'
 Vue.use(Vuex)
 
-
-import { pool } from './pool'
+import user from './user'
 
 
 export default new Vuex.Store({
     modules: {
-        pool
+        user
     },
     strict: process.env.NODE_ENV !== 'production'
 })
