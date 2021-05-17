@@ -83,6 +83,7 @@ exports.createProofRequest = async (req, res, next) => {
 
         const response = {
             proofData: proofData,
+            nonce: nonce,
             status: true
         }
         await indy.closeWallet(walletHandle)
@@ -105,10 +106,14 @@ exports.verifiy = async (req, res, next) => {
         if (!body.proofData) {
             throw new BadRequest('Proof Data is required');
         }
+        if (!body.credDefId) {
+            throw new BadRequest('Credential Definition ID is required');
+        }
 
         const proofData = body.proofData
         const verifierDid = body.verifierDid
-       
+        const credDefId = body.credDefId
+        const nonce = body.nonce
         const poolHandle = await pool
         
         
@@ -120,7 +125,7 @@ exports.verifiy = async (req, res, next) => {
 
         console.log("VERIFIER: OBTENIENDO INFORMACION ADICIONAL DE LA RED ANTES DE VERIFICAR PRUEBA")
         console.log(JSON.stringify(proofData['identifiers'], null, 4))
-
+       
             //move to body params
         let proofRequest = {
             'nonce': nonce,

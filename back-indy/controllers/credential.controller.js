@@ -28,7 +28,6 @@ exports.createCredentialDefinition = async (req, res, next) => {
         const walletName = body.walletName
         const walletPassword = body.walletPassword
         const schemaId = body.schemaId
-        const tag = "Tag-DID-"+ issuerDid +"SCHE-" + schemaId
 
 
         let walletHandle = await user.openWallet(walletName, walletPassword);
@@ -41,7 +40,7 @@ exports.createCredentialDefinition = async (req, res, next) => {
             walletHandle,
             issuerDid,
             readedSchema,
-            tag,
+            'TAG1',
             'CL',
             '{"support_revocation": false}'
         );
