@@ -1,0 +1,940 @@
+{
+	"info": {
+		"_postman_id": "9590244e-4835-4a04-aaa2-128820632440",
+		"name": "indy",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "ISSUER",
+			"item": [
+				{
+					"name": "1. createWallet Issuer",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Content-Type header is present\", function () {",
+									"    pm.response.to.have.header(\"Content-Type\");",
+									"});",
+									"",
+									"pm.test(\"Status test\", function () {",
+									"    pm.response.to.have.status(200);",
+									"});",
+									"",
+									"pm.test(\"Response must be valid and have a body\", function () {",
+									"    pm.response.to.be.ok;",
+									"    pm.response.to.be.withBody;",
+									"    pm.response.to.be.json;",
+									"});",
+									"",
+									"var jsonData = pm.response.json();",
+									"",
+									"",
+									"pm.test(\"DID, Key is not empty\", function () {",
+									"    var DID = jsonData.DID;",
+									"    pm.expect(DID).to.not.be.empty;",
+									"    if(DID) {",
+									"      pm.environment.set(\"DID_ISSUER\", DID);",
+									"    }",
+									"    var key = jsonData.key;",
+									"    pm.expect(key).to.not.be.empty;",
+									" if(key) {",
+									"      pm.environment.set(\"KEY_ISSUER\", key);",
+									"    }",
+									"",
+									"});",
+									"",
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"type": "text",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"name\": \"{{WALLET_NAME_ISSUER}}\",\n    \"password\": \"{{WALLET_PASSWORD}}\",\n    \"type\": \"{{WALLET_TYPE_ISSUER}}\"\n}"
+						},
+						"url": {
+							"raw": "http://localhost:5900/api/wallet",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "5900",
+							"path": [
+								"api",
+								"wallet"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "2. createSchema",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Content-Type header is present\", function () {",
+									"    pm.response.to.have.header(\"Content-Type\");",
+									"});",
+									"",
+									"pm.test(\"Status test\", function () {",
+									"    pm.response.to.have.status(200);",
+									"});",
+									"",
+									"pm.test(\"Response must be valid and have a body\", function () {",
+									"    pm.response.to.be.ok;",
+									"    pm.response.to.be.withBody;",
+									"    pm.response.to.be.json;",
+									"});",
+									"",
+									"var jsonData = pm.response.json();",
+									"",
+									"",
+									"pm.test(\"Schema is not empty\", function () {",
+									"    var schemaId = jsonData.schemaId;",
+									"    pm.expect(schemaId).to.not.be.empty;",
+									"    if(schemaId) {",
+									"      pm.environment.set(\"SCHEMAID\", schemaId);",
+									"    }",
+									"    ",
+									"});",
+									"",
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"type": "text",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"name\": \"Job-Certificate\",\n    \"did\": \"{{DID_ISSUER}}\",\n    \"walletName\": \"{{WALLET_NAME_ISSUER}}\",\n    \"walletPassword\": \"{{WALLET_PASSWORD}}\",\n    \"attributes\": [\n        \"first_name\",\n            \"last_name\",\n            \"salary\",\n            \"employee_status\",\n            \"experience\"\n    ]\n}"
+						},
+						"url": {
+							"raw": "http://localhost:5900/api/schema",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "5900",
+							"path": [
+								"api",
+								"schema"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "3. getSchema",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Content-Type",
+								"type": "text",
+								"value": "application/json"
+							}
+						],
+						"url": {
+							"raw": "http://localhost:5900/api/schema/{{SCHEMAID}}/{{DID_ISSUER}}",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "5900",
+							"path": [
+								"api",
+								"schema",
+								"{{SCHEMAID}}",
+								"{{DID_ISSUER}}"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "4. createCredentialDefinition",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Content-Type header is present\", function () {",
+									"    pm.response.to.have.header(\"Content-Type\");",
+									"});",
+									"",
+									"pm.test(\"Status test\", function () {",
+									"    pm.response.to.have.status(200);",
+									"});",
+									"",
+									"pm.test(\"Response must be valid and have a body\", function () {",
+									"    pm.response.to.be.ok;",
+									"    pm.response.to.be.withBody;",
+									"    pm.response.to.be.json;",
+									"});",
+									"",
+									"var jsonData = pm.response.json();",
+									"",
+									"",
+									"pm.test(\"Credential Definition Id is not empty\", function () {",
+									"    var credDefId = jsonData.credDefId;",
+									"    pm.expect(credDefId).to.not.be.empty;",
+									"    if(credDefId) {",
+									"      pm.environment.set(\"CRED_DEFINITION_ID\", credDefId);",
+									"    } ",
+									"var credDef = jsonData.credDef;",
+									"    ",
+									"    if(credDef) {",
+									"      pm.environment.set(\"CRED_DEFINITION_JSON\", JSON.stringify(credDef));",
+									"    }",
+									"",
+									"",
+									"",
+									"    ",
+									"});",
+									"",
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"type": "text",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"did\": \"{{DID_ISSUER}}\",\n    \"walletName\": \"{{WALLET_NAME_ISSUER}}\",\n    \"walletPassword\": \"{{WALLET_PASSWORD}}\",\n    \"schemaId\": \"{{SCHEMAID}}\"\n}"
+						},
+						"url": {
+							"raw": "http://localhost:5900/api/credentialDefinition",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "5900",
+							"path": [
+								"api",
+								"credentialDefinition"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "5. createCredentialOffer",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Content-Type header is present\", function () {",
+									"    pm.response.to.have.header(\"Content-Type\");",
+									"});",
+									"",
+									"pm.test(\"Status test\", function () {",
+									"    pm.response.to.have.status(200);",
+									"});",
+									"",
+									"pm.test(\"Response must be valid and have a body\", function () {",
+									"    pm.response.to.be.ok;",
+									"    pm.response.to.be.withBody;",
+									"    pm.response.to.be.json;",
+									"});",
+									"",
+									"var jsonData = pm.response.json();",
+									"",
+									"",
+									"pm.test(\"Credential Definition Id is not empty\", function () {",
+									"    var credOffer = jsonData.credOffer;",
+									"    pm.expect(credOffer).to.not.be.empty;",
+									"    if(credOffer) {",
+									"      pm.environment.set(\"CRED_OFFER\", JSON.stringify(credOffer));",
+									"    }",
+									"    ",
+									"});",
+									"",
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"type": "text",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"walletName\": \"{{WALLET_NAME_ISSUER}}\",\n    \"walletPassword\": \"{{WALLET_PASSWORD}}\",\n    \"credDefId\": \"{{CRED_DEFINITION_ID}}\"\n}"
+						},
+						"url": {
+							"raw": "http://localhost:5900/api/credentialOffer",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "5900",
+							"path": [
+								"api",
+								"credentialOffer"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "9. createCredential",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Content-Type header is present\", function () {",
+									"    pm.response.to.have.header(\"Content-Type\");",
+									"});",
+									"",
+									"pm.test(\"Status test\", function () {",
+									"    pm.response.to.have.status(200);",
+									"});",
+									"",
+									"pm.test(\"Response must be valid and have a body\", function () {",
+									"    pm.response.to.be.ok;",
+									"    pm.response.to.be.withBody;",
+									"    pm.response.to.be.json;",
+									"});",
+									"",
+									"var jsonData = pm.response.json();",
+									"",
+									"",
+									"pm.test(\"Credential Definition Id is not empty\", function () {",
+									"    var credentialData = jsonData.credentialData;",
+									"    pm.expect(credentialData).to.not.be.empty;",
+									"    if(credentialData) {",
+									"      pm.environment.set(\"CRED_DATA\", JSON.stringify(credentialData));",
+									"    }",
+									"    ",
+									"});",
+									"",
+									""
+								],
+								"type": "text/javascript"
+							}
+						},
+						{
+							"listen": "prerequest",
+							"script": {
+								"exec": [
+									"var walletName = pm.variables.get(\"WALLET_NAME_ISSUER\");",
+									"var walletPassword = pm.variables.get(\"WALLET_PASSWORD\");",
+									"var credRequest = pm.variables.get(\"CRED_REQUEST\");",
+									"var credOffer = pm.variables.get(\"CRED_OFFER\");",
+									"",
+									"var body =  {",
+									"    \"walletName\": walletName,",
+									"    \"walletPassword\": walletPassword,",
+									"    \"credOffer\":  JSON.parse(credOffer),",
+									"    \"credReq\":  JSON.parse(credRequest),",
+									"}",
+									"pm.variables.set(\"BODY_CREDENTIAL\",JSON.stringify(body) );",
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"type": "text",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{{BODY_CREDENTIAL}}"
+						},
+						"url": {
+							"raw": "http://localhost:5900/api/credential",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "5900",
+							"path": [
+								"api",
+								"credential"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "HOLDER",
+			"item": [
+				{
+					"name": "6. createWallet Holder",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Content-Type header is present\", function () {",
+									"    pm.response.to.have.header(\"Content-Type\");",
+									"});",
+									"",
+									"pm.test(\"Status test\", function () {",
+									"    pm.response.to.have.status(200);",
+									"});",
+									"",
+									"pm.test(\"Response must be valid and have a body\", function () {",
+									"    pm.response.to.be.ok;",
+									"    pm.response.to.be.withBody;",
+									"    pm.response.to.be.json;",
+									"});",
+									"",
+									"var jsonData = pm.response.json();",
+									"",
+									"",
+									"pm.test(\"DID, Key is not empty\", function () {",
+									"    var DID = jsonData.DID;",
+									"    pm.expect(DID).to.not.be.empty;",
+									"    if(DID) {",
+									"      pm.environment.set(\"DID_HOLDER\", DID);",
+									"    }",
+									"    var key = jsonData.key;",
+									"    pm.expect(key).to.not.be.empty;",
+									" if(key) {",
+									"      pm.environment.set(\"KEY_HOLDER\", key);",
+									"    }",
+									"",
+									"});",
+									"",
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"type": "text",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"name\": \"{{WALLET_NAME_HOLDER}}\",\n    \"password\": \"{{WALLET_PASSWORD}}\",\n    \"type\": \"{{WALLET_TYPE_HOLDER}}\"\n}"
+						},
+						"url": {
+							"raw": "http://localhost:5900/api/wallet",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "5900",
+							"path": [
+								"api",
+								"wallet"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "7. create Master Request",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Content-Type header is present\", function () {",
+									"    pm.response.to.have.header(\"Content-Type\");",
+									"});",
+									"",
+									"pm.test(\"Status test\", function () {",
+									"    pm.response.to.have.status(200);",
+									"});",
+									"",
+									"pm.test(\"Response must be valid and have a body\", function () {",
+									"    pm.response.to.be.ok;",
+									"    pm.response.to.be.withBody;",
+									"    pm.response.to.be.json;",
+									"});",
+									"",
+									"var jsonData = pm.response.json();",
+									"",
+									"",
+									"pm.test(\"DID, Key is not empty\", function () {",
+									"    var masterSecretId = jsonData.masterSecretId;",
+									"    pm.expect(masterSecretId).to.not.be.empty;",
+									"    if(masterSecretId) {",
+									"      pm.environment.set(\"MASTER_SECRET_ID\", masterSecretId);",
+									"    }",
+									"",
+									"});",
+									"",
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"type": "text",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"walletName\": \"{{WALLET_NAME_HOLDER}}\",\n    \"walletPassword\": \"{{WALLET_PASSWORD}}\"\n}"
+						},
+						"url": {
+							"raw": "http://localhost:5900/api/masterRequest",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "5900",
+							"path": [
+								"api",
+								"masterRequest"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "8. createCredentialRequest",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Content-Type header is present\", function () {",
+									"    pm.response.to.have.header(\"Content-Type\");",
+									"});",
+									"",
+									"pm.test(\"Status test\", function () {",
+									"    pm.response.to.have.status(200);",
+									"});",
+									"",
+									"pm.test(\"Response must be valid and have a body\", function () {",
+									"    pm.response.to.be.ok;",
+									"    pm.response.to.be.withBody;",
+									"    pm.response.to.be.json;",
+									"});",
+									"",
+									"var jsonData = pm.response.json();",
+									"",
+									"",
+									"pm.test(\"Credential Definition Id is not empty\", function () {",
+									"    var credReq = jsonData.credReq;",
+									"    pm.expect(credReq).to.not.be.empty;",
+									"    if(credReq) {",
+									"      pm.environment.set(\"CRED_REQUEST\", JSON.stringify(credReq));",
+									"    }",
+									"var credReqMetadata = jsonData.credReqMetadata;",
+									"    pm.expect(credReqMetadata).to.not.be.empty;",
+									"    if(credReqMetadata) {",
+									"      pm.environment.set(\"CRED_REQUEST_METADATA\", JSON.stringify(credReqMetadata));",
+									"    }",
+									"    ",
+									"});",
+									"",
+									""
+								],
+								"type": "text/javascript"
+							}
+						},
+						{
+							"listen": "prerequest",
+							"script": {
+								"exec": [
+									"var walletName = pm.variables.get(\"WALLET_NAME_HOLDER\");",
+									"var walletPassword = pm.variables.get(\"WALLET_PASSWORD\");",
+									"var holderDID = pm.variables.get(\"DID_HOLDER\");",
+									"var masterSecretId = pm.variables.get(\"MASTER_SECRET_ID\");",
+									"var credOffer = pm.variables.get(\"CRED_OFFER\");",
+									"var defJson = pm.variables.get(\"CRED_DEFINITION_JSON\");",
+									"",
+									"var body =  {",
+									"    \"walletName\": walletName,",
+									"    \"walletPassword\": walletPassword,",
+									"    \"holderDID\": holderDID,",
+									"    \"masterSecretId\": masterSecretId,",
+									"    \"credOffer\": JSON.parse(credOffer),",
+									"    \"defJson\": JSON.parse(defJson)",
+									"}",
+									"pm.variables.set(\"BODY_CREDENTIAL_REQUEST\",JSON.stringify(body) );",
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"type": "text",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{{BODY_CREDENTIAL_REQUEST}}"
+						},
+						"url": {
+							"raw": "http://localhost:5900/api/credentialRequest",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "5900",
+							"path": [
+								"api",
+								"credentialRequest"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "10. store Credential",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Content-Type header is present\", function () {",
+									"    pm.response.to.have.header(\"Content-Type\");",
+									"});",
+									"",
+									"pm.test(\"Status test\", function () {",
+									"    pm.response.to.have.status(200);",
+									"});",
+									"",
+									"pm.test(\"Response must be valid and have a body\", function () {",
+									"    pm.response.to.be.ok;",
+									"    pm.response.to.be.withBody;",
+									"    pm.response.to.be.json;",
+									"});",
+									"",
+									"var jsonData = pm.response.json();",
+									"",
+									"",
+									"pm.test(\"Credential Definition Id is not empty\", function () {",
+									"    var storeId = jsonData.id;",
+									"    pm.expect(storeId).to.not.be.empty;",
+									"    if(storeId) {",
+									"      pm.environment.set(\"CRED_STORE_ID\", storeId);",
+									"    }",
+									"",
+									"    ",
+									"});",
+									"",
+									""
+								],
+								"type": "text/javascript"
+							}
+						},
+						{
+							"listen": "prerequest",
+							"script": {
+								"exec": [
+									"var walletName = pm.variables.get(\"WALLET_NAME_HOLDER\");",
+									"var walletPassword = pm.variables.get(\"WALLET_PASSWORD\");",
+									"var credRequestMetaData = pm.variables.get(\"CRED_REQUEST_METADATA\");",
+									"var credDefinitionJson = pm.variables.get(\"CRED_DEFINITION_JSON\");",
+									"var credData = pm.variables.get(\"CRED_DATA\");",
+									"",
+									"var body =  {",
+									"    \"walletName\": walletName,",
+									"    \"walletPassword\": walletPassword,",
+									"    \"credReqMetadata\":  JSON.parse(credRequestMetaData),",
+									"    \"defJson\": JSON.parse(credDefinitionJson),",
+									"    \"credentialData\": JSON.parse(credData)",
+									"}",
+									"pm.variables.set(\"BODY_CREDENTIAL_STORE\",JSON.stringify(body) );",
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"type": "text",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{{BODY_CREDENTIAL_STORE}}"
+						},
+						"url": {
+							"raw": "http://localhost:5900/api/credential/store",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "5900",
+							"path": [
+								"api",
+								"credential",
+								"store"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "VERIFIER",
+			"item": [
+				{
+					"name": "11. createWallet Verifier",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Content-Type header is present\", function () {",
+									"    pm.response.to.have.header(\"Content-Type\");",
+									"});",
+									"",
+									"pm.test(\"Status test\", function () {",
+									"    pm.response.to.have.status(200);",
+									"});",
+									"",
+									"pm.test(\"Response must be valid and have a body\", function () {",
+									"    pm.response.to.be.ok;",
+									"    pm.response.to.be.withBody;",
+									"    pm.response.to.be.json;",
+									"});",
+									"",
+									"var jsonData = pm.response.json();",
+									"",
+									"",
+									"pm.test(\"DID, Key is not empty\", function () {",
+									"    var DID = jsonData.DID;",
+									"    pm.expect(DID).to.not.be.empty;",
+									"    if(DID) {",
+									"      pm.environment.set(\"DID_VERIFIER\", DID);",
+									"    }",
+									"    var key = jsonData.key;",
+									"    pm.expect(key).to.not.be.empty;",
+									" if(key) {",
+									"      pm.environment.set(\"KEY_VERIFIER\", key);",
+									"    }",
+									"",
+									"});",
+									"",
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"type": "text",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"name\": \"{{WALLET_NAME_VERIFIER}}\",\n    \"password\": \"{{WALLET_PASSWORD}}\",\n    \"type\": \"{{WALLET_TYPE_VERIFIER}}\"\n}"
+						},
+						"url": {
+							"raw": "http://localhost:5900/api/wallet",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "5900",
+							"path": [
+								"api",
+								"wallet"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "12. create Proof Request",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Content-Type header is present\", function () {",
+									"    pm.response.to.have.header(\"Content-Type\");",
+									"});",
+									"",
+									"pm.test(\"Status test\", function () {",
+									"    pm.response.to.have.status(200);",
+									"});",
+									"",
+									"pm.test(\"Response must be valid and have a body\", function () {",
+									"    pm.response.to.be.ok;",
+									"    pm.response.to.be.withBody;",
+									"    pm.response.to.be.json;",
+									"});",
+									"",
+									"var jsonData = pm.response.json();",
+									"",
+									"",
+									"pm.test(\"DID, Key is not empty\", function () {",
+									"    var proofData = jsonData.proofData;",
+									"    pm.expect(proofData).to.not.be.empty;",
+									"    if(proofData) {",
+									"      pm.environment.set(\"PROOF_DATA\", DID);",
+									"    }",
+									"",
+									"});",
+									"",
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"type": "text",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"walletName\": \"{{WALLET_NAME_HOLDER}}\",\n    \"walletPassword\": \"{{WALLET_PASSWORD}}\",\n    \"credDefId\": \"{{CRED_DEFINITION_ID}}\",\n    \"holderDid\": \"{{DID_HOLDER}}\",\n    \"masterSecretId\": \"{{MASTER_SECRET_ID}}\"\n}"
+						},
+						"url": {
+							"raw": "http://localhost:5900/api/proof",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "5900",
+							"path": [
+								"api",
+								"proof"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "13. verify",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"type": "text",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"verifierDid\": \"{{DID_VERIFIER}}\",\n    \"proofData\": \"{{PROOF_DATA}}\"\n}"
+						},
+						"url": {
+							"raw": "http://localhost:5900/api/verify",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "5900",
+							"path": [
+								"api",
+								"verify"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		}
+	]
+}
