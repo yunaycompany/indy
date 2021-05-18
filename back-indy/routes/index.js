@@ -13,6 +13,8 @@ const router = express.Router();
 
 //Wallet
 router.post("/wallet", walletController.createWallet);
+router.post("/login", walletController.loginWallet);
+router.post("/logout", walletController.logoutWallet);
 router.post("/masterRequest", walletController.createMasterRequest);
 
 

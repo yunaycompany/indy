@@ -1,6 +1,6 @@
 const indy = require('indy-sdk');
 const user = require('../helpers/user');
-const {WALLET_TYPE} = require('../helpers/walletType');
+const { WALLET_TYPE } = require('../helpers/walletType');
 
 const { BadRequest, NotFound, ApiError } = require('../helpers/error')
 
@@ -20,7 +20,6 @@ exports.createWallet = async (req, res, next) => {
         const walletName = body.name
         const walletPassword = body.password
         const walletType = body.type
-        console.log(walletType)
 
         let userWallet = await user.createWalletDid(walletName, walletPassword);
         let did = userWallet.did
@@ -59,23 +58,53 @@ exports.createWallet = async (req, res, next) => {
         next(e)
     }
 }
-
-exports.createMasterRequest = async (req, res, next) => {
+exports.loginWallet = async (req, res, next) => {
     var body = req.body;
     try {
-        if (!body.walletName) {
+        if (!body.name) {
             throw new BadRequest('Wallet Name is required');
         }
-        if (!body.walletPassword) {
+        if (!body.password) {
             throw new BadRequest('Wallet Password is required');
         }
 
-
-        const walletName = body.walletName
-        const walletPassword = body.walletPassword
+        const walletName = body.name
+        const walletPassword = body.password
 
 
         let walletHandle = await user.openWallet(walletName, walletPassword);
+
+        req.session.walletHandle = walletHandle;
+
+        const response = {
+            walletHandle: walletHandle,
+            status: true
+        }
+
+        res.status(200).send(response);
+    } catch (e) {
+        next(e)
+    }
+}
+exports.logoutWallet = async (req, res, next) => {
+    try {
+        const walletHandle = req.session.walletHandle 
+
+        await indy.closeWallet(walletHandle)
+        const response = {
+            status: true
+        }
+
+        res.status(200).send(response);
+    } catch (e) {
+        next(e)
+    }
+}
+
+exports.createMasterRequest = async (req, res, next) => {
+    try {
+
+        const walletHandle = req.session.walletHandle
 
         const masterSecretId = await indy.proverCreateMasterSecret(
             walletHandle, //Holder
@@ -88,8 +117,7 @@ exports.createMasterRequest = async (req, res, next) => {
             masterSecretId: masterSecretId,
             status: true
         }
-        await indy.closeWallet(walletHandle)
-        
+
         res.status(200).send(response);
     } catch (e) {
         next(e)

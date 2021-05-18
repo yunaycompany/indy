@@ -11,18 +11,14 @@ exports.createSchema = async (req, res, next) => {
         if (!body.did) {
             throw new BadRequest('Issuer Did is required');
         }
-        if (!body.walletName) {
-            throw new BadRequest('Wallet Name is required');
-        }
-        if (!body.walletPassword) {
-            throw new BadRequest('Wallet Password is required');
-        }
+        
         if (!body.name) {
             throw new BadRequest('Schema Name is required');
         }
         console.log("CREANDO SCHEMA EN LOCAL")
         const poolHandle = await pool
         const issuerDid = body.did
+        const walletHandle = req.session.walletHandle 
         const walletName = body.walletName
         const walletPassword = body.walletPassword
         const schemaName = body.name//'Job-Certificate',
@@ -45,7 +41,6 @@ exports.createSchema = async (req, res, next) => {
         console.log(schemaId);
         console.log(schema);
 
-        let walletHandle = await user.openWallet(walletName, walletPassword);
 
         console.log("REGISTRANDO SCHEMA EN LA RED")
         const result = await connection.sendSchema(poolHandle, walletHandle, issuerDid, schema);
@@ -56,7 +51,6 @@ exports.createSchema = async (req, res, next) => {
             schema: schema,
             status: true
         }
-        await indy.closeWallet(walletHandle)
 
         res.status(200).send(response);
     } catch (e) {

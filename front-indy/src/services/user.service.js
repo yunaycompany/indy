@@ -5,6 +5,6 @@ export const userService = {
 }
 
 
-function createWalletDid(user)  {
-    return api.post('test', user)
+function createWalletDid(data)  {
+    return api.post('wallet', data)
 }

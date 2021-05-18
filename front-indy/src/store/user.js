@@ -5,8 +5,8 @@ const state = {
 }
 
 const actions = {
-    createWalletDid({commit}, clientId) {
-        return userService.createWalletDid(clientId).then(
+    createWalletDid({commit}, data) {
+        return userService.createWalletDid(data).then(
             response => {
                 commit('createWalletSuccess', response)
             }
@@ -16,6 +16,7 @@ const actions = {
 
 const mutations = {
     createWalletSuccess(state, response) {
+        console.log(response)
         state.wallet = response;
     },
 }

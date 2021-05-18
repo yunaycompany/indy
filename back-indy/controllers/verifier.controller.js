@@ -8,12 +8,7 @@ const {BadRequest,NotFound, ApiError} = require('../helpers/error')
 exports.createProofRequest = async (req, res, next) => {
     var body = req.body;
     try {
-        if (!body.walletName) {
-            throw new BadRequest('Wallet Name is required');
-        }
-        if (!body.walletPassword) {
-            throw new BadRequest('Wallet Password is required');
-        }
+        
         if (!body.credDefId) {
             throw new BadRequest('Credential Definition ID is required');
         }
@@ -32,7 +27,7 @@ exports.createProofRequest = async (req, res, next) => {
        
         const poolHandle = await pool
 
-        let walletHandle = await user.openWallet(walletName, walletPassword);
+        const walletHandle = req.session.walletHandle 
          // este usuario, lo primero que tiene que hacer es solicitar una prueba
         // para ello genera un proof request
         nonce = await indy.generateNonce();
@@ -86,7 +81,7 @@ exports.createProofRequest = async (req, res, next) => {
             nonce: nonce,
             status: true
         }
-        await indy.closeWallet(walletHandle)
+       
 
         res.status(200).send(response);
     } catch (e) {

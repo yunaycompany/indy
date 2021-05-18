@@ -41,7 +41,6 @@ export default {
 body {
   margin: 0;
   padding: 0;
-  color: #fff;
   font-family: 'Open Sans', Helvetica, sans-serif;
   box-sizing: border-box;
 }

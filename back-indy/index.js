@@ -1,4 +1,5 @@
 const express = require('express');
+var session = require('express-session');
 var dotenv =require( "dotenv");
 var cors = require ('cors');
 const app = express();
@@ -11,6 +12,12 @@ const poolHandle = require('./helpers/pool')
 app.use(express.json());
 app.use(express.urlencoded({
   extended: true
+}));
+app.use(session({
+    secret : 'SECRET',
+    resave : false,
+    saveUninitialized : false,
+    walletHandle : null
 }));
 
 

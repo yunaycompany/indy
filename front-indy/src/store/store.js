@@ -1,11 +1,17 @@
 import Vue from 'vue'
 import Vuex from 'vuex'
+
+import {user} from './user'
+
 Vue.use(Vuex)
 
-import user from './user'
 
 
 export default new Vuex.Store({
+    getters: {},
+    mutations: {},
+    state: {},
+    actions: {},
     modules: {
         user
     },

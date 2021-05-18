@@ -13,24 +13,18 @@ exports.createCredentialDefinition = async (req, res, next) => {
         if (!body.did) {
             throw new BadRequest('Issuer Did is required');
         }
-        if (!body.walletName) {
-            throw new BadRequest('Wallet Name is required');
-        }
-        if (!body.walletPassword) {
-            throw new BadRequest('Wallet Password is required');
-        }
+        
         if (!body.schemaId) {
             throw new BadRequest('Wallet Schema is required');
         }
 
         const poolHandle = await pool
-        const issuerDid = body.did
-        const walletName = body.walletName
-        const walletPassword = body.walletPassword
+        const issuerDid = body.credDefId
         const schemaId = body.schemaId
 
 
-        let walletHandle = await user.openWallet(walletName, walletPassword);
+        const walletHandle = req.session.walletHandle 
+        
         const [, readedSchema] = await connection.getSchema(poolHandle, issuerDid, schemaId);
 
         // register the credential definition
@@ -63,7 +57,6 @@ exports.createCredentialDefinition = async (req, res, next) => {
             credDef: defJson,
             status: true
         }
-        await indy.closeWallet(walletHandle)
         res.status(200).send(response);
     } catch (e) {
         next(e)
@@ -74,24 +67,15 @@ exports.createCredentialOffer = async(req, res, next) =>{
     var body = req.body;
     try {
 
-        if (!body.walletName) {
-            throw new BadRequest('Wallet Name is required');
-        }
-        if (!body.walletPassword) {
-            throw new BadRequest('Wallet Password is required');
-        }
-
         if (!body.credDefId) {
             throw new BadRequest('Credential Definition ID is required');
         }
 
-
-        const walletName = body.walletName
-        const walletPassword = body.walletPassword
+        
         const credDefId = body.credDefId
 
 
-        let walletHandle = await user.openWallet(walletName, walletPassword);
+        const walletHandle = req.session.walletHandle 
 
         console.log("CREANDO LA OFERTA DEL CREDENCIAL PARA EL USUARIO")
         const credOffer = await indy.issuerCreateCredentialOffer(
@@ -105,7 +89,7 @@ exports.createCredentialOffer = async(req, res, next) =>{
             credOffer: credOffer,
             status: true
         }
-        await indy.closeWallet(walletHandle)
+       
         
         res.status(200).send(response);
 
@@ -118,13 +102,6 @@ exports.createCredentialOffer = async(req, res, next) =>{
 exports.createCredentialRequest = async(req, res, next)=>{
     var body = req.body;
     try {
-
-        if (!body.walletName) {
-            throw new BadRequest('Wallet Name is required');
-        }
-        if (!body.walletPassword) {
-            throw new BadRequest('Wallet Password is required');
-        }
 
         if (!body.holderDID) {
             throw new BadRequest('Holder ID is required');
@@ -140,16 +117,13 @@ exports.createCredentialRequest = async(req, res, next)=>{
         if (!body.masterSecretId) {
             throw new BadRequest('Master Secret ID is required');
         }
-
-
-        const walletName = body.walletName
-        const walletPassword = body.walletPassword
+       
         const holderDID = body.holderDID
         const credOffer = body.credOffer
         const defJson = body.defJson
         const masterSecretId = body.masterSecretId
 
-        let walletHandle = await user.openWallet(walletName, walletPassword);
+        const walletHandle = req.session.walletHandle 
     
         console.log("HOLDER: ACEPTANDO LA OFERTA DEL CREDENTIAL Y GENERANDO RESPUESTA");
         const [credReq, credReqMetadata] = await indy.proverCreateCredentialReq(
@@ -169,7 +143,6 @@ exports.createCredentialRequest = async(req, res, next)=>{
             credReqMetadata: credReqMetadata,
             status: true
         }
-        await indy.closeWallet(walletHandle)
         
         res.status(200).send(response);
     } catch (e) {
@@ -183,12 +156,7 @@ exports.createCredential = async(req, res, next)=>{
     var body = req.body;
     try {
 
-        if (!body.walletName) {
-            throw new BadRequest('Wallet Name is required');
-        }
-        if (!body.walletPassword) {
-            throw new BadRequest('Wallet Password is required');
-        }
+       
 
         if (!body.credReq) {
             throw new BadRequest('Credential Request is required');
@@ -198,16 +166,10 @@ exports.createCredential = async(req, res, next)=>{
             throw new BadRequest('Credential Offer is required');
         }
 
-
-        const walletName = body.walletName
-        const walletPassword = body.walletPassword
         const credOffer = body.credOffer
         const credReq = body.credReq
-
-
-
-
-        let walletHandle = await user.openWallet(walletName, walletPassword);
+        
+        const walletHandle = req.session.walletHandle 
     
         // ahora que el usuario A ya ha aceptado la oferta, 
         // se envia la respuesta de vuelta al issuer, para que este la procese y emita la credencial
@@ -238,7 +200,6 @@ exports.createCredential = async(req, res, next)=>{
             credentialData: credentialData,
             status: true
         }
-        await indy.closeWallet(walletHandle)
         
         res.status(200).send(response);
     } catch (e) {
@@ -251,13 +212,6 @@ exports.createCredential = async(req, res, next)=>{
 exports.holderStoreCredential = async(req, res, next)=>{
     var body = req.body;
     try {
-
-        if (!body.walletName) {
-            throw new BadRequest('Wallet Name is required');
-        }
-        if (!body.walletPassword) {
-            throw new BadRequest('Wallet Password is required');
-        }
 
         if (!body.credReqMetadata) {
             throw new BadRequest('Credential Metadata is required');
@@ -272,8 +226,7 @@ exports.holderStoreCredential = async(req, res, next)=>{
         }
 
 
-        const walletName = body.walletName
-        const walletPassword = body.walletPassword
+        
         const credReqMetadata = body.credReqMetadata
         const defJson = body.defJson
         const credentialData =body.credentialData
@@ -281,8 +234,7 @@ exports.holderStoreCredential = async(req, res, next)=>{
 
 
 
-        let walletHandle = await user.openWallet(walletName, walletPassword);
-    
+        const walletHandle = req.session.walletHandle 
        // ahora que la credencial esta creada,
        // se le envia al usuario para que la verifique y la guarde en su wallet
        console.log("HOLDER: GUARDANDO CREDENCIAL EN WALLET")
@@ -301,7 +253,7 @@ exports.holderStoreCredential = async(req, res, next)=>{
             id: id,
             status: true
         }
-        await indy.closeWallet(walletHandle)
+       
         
         res.status(200).send(response);
     } catch (e) {
