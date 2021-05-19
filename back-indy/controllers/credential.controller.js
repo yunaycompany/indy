@@ -23,7 +23,7 @@ exports.createCredentialDefinition = async (req, res, next) => {
         const schemaId = body.schemaId
 
 
-        const walletHandle = req.session.walletHandle 
+        const walletHandle = body.walletHandle 
         
         const [, readedSchema] = await connection.getSchema(poolHandle, issuerDid, schemaId);
 
@@ -75,7 +75,7 @@ exports.createCredentialOffer = async(req, res, next) =>{
         const credDefId = body.credDefId
 
 
-        const walletHandle = req.session.walletHandle 
+        const walletHandle = body.walletHandle 
 
         console.log("CREANDO LA OFERTA DEL CREDENCIAL PARA EL USUARIO")
         const credOffer = await indy.issuerCreateCredentialOffer(
@@ -123,7 +123,7 @@ exports.createCredentialRequest = async(req, res, next)=>{
         const defJson = body.defJson
         const masterSecretId = body.masterSecretId
 
-        const walletHandle = req.session.walletHandle 
+        const walletHandle = body.walletHandle 
     
         console.log("HOLDER: ACEPTANDO LA OFERTA DEL CREDENTIAL Y GENERANDO RESPUESTA");
         const [credReq, credReqMetadata] = await indy.proverCreateCredentialReq(
@@ -169,7 +169,7 @@ exports.createCredential = async(req, res, next)=>{
         const credOffer = body.credOffer
         const credReq = body.credReq
         
-        const walletHandle = req.session.walletHandle 
+        const walletHandle = body.walletHandle 
     
         // ahora que el usuario A ya ha aceptado la oferta, 
         // se envia la respuesta de vuelta al issuer, para que este la procese y emita la credencial
@@ -234,7 +234,7 @@ exports.holderStoreCredential = async(req, res, next)=>{
 
 
 
-        const walletHandle = req.session.walletHandle 
+        const walletHandle = body.walletHandle 
        // ahora que la credencial esta creada,
        // se le envia al usuario para que la verifique y la guarde en su wallet
        console.log("HOLDER: GUARDANDO CREDENCIAL EN WALLET")

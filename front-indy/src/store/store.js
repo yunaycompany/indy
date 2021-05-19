@@ -3,6 +3,8 @@ import Vuex from 'vuex'
 
 import {user} from './user'
 
+import {credential} from './credential'
+import {schema} from './schema'
 Vue.use(Vuex)
 
 
@@ -13,7 +15,9 @@ export default new Vuex.Store({
     state: {},
     actions: {},
     modules: {
-        user
+        user,
+        schema,
+        credential
     },
     strict: process.env.NODE_ENV !== 'production'
 })

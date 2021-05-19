@@ -19,15 +19,13 @@ exports.createProofRequest = async (req, res, next) => {
             throw new BadRequest('Master Secret ID is required');
         }
 
-        const walletName = body.walletName
-        const walletPassword = body.walletPassword
         const credDefId = body.credDefId
         const masterSecretId = body.masterSecretId
         const holderDid = body.holderDid
        
         const poolHandle = await pool
 
-        const walletHandle = req.session.walletHandle 
+        const walletHandle = body.walletHandle 
          // este usuario, lo primero que tiene que hacer es solicitar una prueba
         // para ello genera un proof request
         nonce = await indy.generateNonce();

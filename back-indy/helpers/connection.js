@@ -85,6 +85,26 @@ async function sendSchema(poolHandle, walletHandle, Did, schema) {
     return await indy.signAndSubmitRequest(poolHandle, walletHandle, Did, schemaRequest)
 }
 
+async function getSchemas(poolHandle, walletHandle,did) {
+    let metadata = JSON.parse(await indy.getDidMetadata(walletHandle, did));
+    let schemas = [];
+    for (let schemaId of metadata.schemas) {
+        let schema = await getSchema(poolHandle, did, schemaId);
+        schemas.push(schema);
+    }
+    return schemas;
+};
+
+async function pushEndpointDidAttribute(walletHandle, did,schemaId, attribute ) {
+    let metadata = await indy.getDidMetadata(walletHandle, did);
+    metadata = JSON.parse(metadata);
+    if (!metadata[attribute]) {
+        metadata[attribute] = [];
+    }
+    metadata[attribute].push(schemaId);
+    await indy.setDidMetadata(walletHandle, did, JSON.stringify(metadata));
+};
+
 /**
  * 
  * @param {*} poolHandle 
@@ -179,8 +199,10 @@ async function getVerinym(poolHandle, From, fromWallet, fromDid, fromToKey, to, 
 module.exports = {
     proverGetEntitiesFromLedger,
     verifierGetEntitiesFromLedger,
+    pushEndpointDidAttribute,
     sendSchema,
     getSchema,
+    getSchemas,
     sendCredDef,
     getCredDef,
     sendNym,

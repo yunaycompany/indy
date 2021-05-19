@@ -1,4 +1,5 @@
 const express = require('express');
+const cookieParser = require('cookie-parser');
 var session = require('express-session');
 var dotenv =require( "dotenv");
 var cors = require ('cors');
@@ -8,18 +9,22 @@ const  handleErrors  = require('./middleware/handleErrors')
 const {router} = require('./routes');
 
 const poolHandle = require('./helpers/pool')
-
+app.use(cookieParser());
 app.use(express.json());
 app.use(express.urlencoded({
   extended: true
 }));
 app.use(session({
-    secret : 'SECRET',
-    resave : false,
-    saveUninitialized : false,
-    walletHandle : null
-}));
-
+    secret: 'wow very secret',
+    cookie: {
+      maxAge: 600000,
+      secure: true
+    },
+    saveUninitialized: false,
+    resave: false,
+    walletHandle : null,
+    unset: 'destroy'
+  }));
 
 
 app.use(
@@ -27,7 +32,9 @@ app.use(
         origin: [
             "http://localhost:3000",
             "http://localhost:8080"
-        ]
+        ],
+        credentials: true,
+            exposedHeaders: ['set-cookie']
     })
 );
 

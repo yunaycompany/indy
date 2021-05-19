@@ -5,10 +5,13 @@
     </div>
     <ul class="sidenav__list">
       <router-link to="/" tag="li" class="sidenav__list-item">
-        Home
+        Inicio
       </router-link>
       <router-link to="/wallet" tag="li"  class="sidenav__list-item">
         Wallet
+      </router-link>
+      <router-link to="/schema" tag="li" class="sidenav__list-item">
+        Esquemas
       </router-link>
     </ul>
   </aside>

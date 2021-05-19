@@ -20,7 +20,16 @@ const router = new VueRouter({
             name: 'wallet',
             component: () => import('./components/Wallet.vue')
         },
-        // Redirect to 404 page, if no match found
+        {
+            path: '/schema',
+            name: 'schema',
+            component: () => import('./components/Schema.vue')
+        },
+        {
+            path: '/credential',
+            name: 'credential',
+            component: () => import('./components/Credential.vue')
+        },
         {
             path: '*',
             redirect: '/'

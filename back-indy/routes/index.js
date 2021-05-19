@@ -20,6 +20,7 @@ router.post("/masterRequest", walletController.createMasterRequest);
 
 //Schema
 router.post("/schema", schemaController.createSchema);
+router.post("/schemas", schemaController.getSchemas);
 router.get("/schema/:schemaId/:did", schemaController.getSchema);
 
 //Credential

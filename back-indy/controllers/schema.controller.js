@@ -15,12 +15,13 @@ exports.createSchema = async (req, res, next) => {
         if (!body.name) {
             throw new BadRequest('Schema Name is required');
         }
+        if (!body.version) {
+            throw new BadRequest('Schema Version is required');
+        }
         console.log("CREANDO SCHEMA EN LOCAL")
         const poolHandle = await pool
         const issuerDid = body.did
-        const walletHandle = req.session.walletHandle 
-        const walletName = body.walletName
-        const walletPassword = body.walletPassword
+        const walletHandle = body.walletHandle 
         const schemaName = body.name//'Job-Certificate',
         const schemaAttributes = body.attributes
         /*[
@@ -31,7 +32,7 @@ exports.createSchema = async (req, res, next) => {
             'experience'
         ]*/
 
-        const version = randomVersion();
+        const version =body.version?body.version: randomVersion();
         const [schemaId, schema] = await indy.issuerCreateSchema(
             issuerDid,
             schemaName,
@@ -45,7 +46,7 @@ exports.createSchema = async (req, res, next) => {
         console.log("REGISTRANDO SCHEMA EN LA RED")
         const result = await connection.sendSchema(poolHandle, walletHandle, issuerDid, schema);
         console.log(result);
-
+        await connection.pushEndpointDidAttribute(walletHandle,issuerDid, schemaId,'schemas');
         const response = {
             schemaId: schemaId,
             schema: schema,
@@ -82,6 +83,34 @@ console.log(schemaId)
         const response = {
             schemaId: schemaId,
             schema: readed,
+            status: true
+        }
+
+        res.status(200).send(response);
+    } catch (e) {
+        next(e)
+    }
+}
+
+
+exports.getSchemas = async (req, res, next) => {
+    try {
+        var body = req.body;
+        if (!body.did) {
+            throw new BadRequest('Issuer Did is required');
+        }
+
+        const issuerDid = body.did
+        const poolHandle = await pool
+
+        const walletHandle = body.wh 
+
+        // create credential definition
+        const schemas = await connection.getSchemas(poolHandle, walletHandle, issuerDid);
+        
+        
+        const response = {
+            schemas: schemas,
             status: true
         }
 
