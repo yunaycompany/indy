@@ -1,7 +1,6 @@
 const indy = require('indy-sdk');
 const connection = require('../helpers/connection.js');
 const pool = require('../helpers/pool')
-const user = require('../helpers/user')
 
 const {BadRequest,NotFound, ApiError} = require('../helpers/error')
 
@@ -22,17 +21,11 @@ exports.createSchema = async (req, res, next) => {
         const poolHandle = await pool
         const issuerDid = body.did
         const walletHandle = body.walletHandle 
-        const schemaName = 'Job-Certificate',
-         schemaAttributes = 
-        [
-            'first_name',
-            'last_name',
-            'salary',
-            'employee_status',
-            'experience'
-        ]
-
-        const version =randomVersion();
+        const schemaName = body.name
+        const schemaAttributes = body.attributes
+        
+        console.log(schemaAttributes)
+        const version =body.version? body.version: randomVersion();
         const [schemaId, schema] = await indy.issuerCreateSchema(
             issuerDid,
             schemaName,

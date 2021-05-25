@@ -23,7 +23,7 @@ exports.createCredentialDefinition = async (req, res, next) => {
         }
 
         const poolHandle = await pool
-        const issuerDid = body.did
+        const issuerDid = body.credDefId
         const schemaId = body.schemaId
         const tag = body.tag
 
@@ -31,7 +31,7 @@ exports.createCredentialDefinition = async (req, res, next) => {
         const walletHandle = body.walletHandle 
         
         const [, readedSchema] = await connection.getSchema(poolHandle, issuerDid, schemaId);
-console.log(readedSchema)
+
         // register the credential definition
         
         console.log("CREANDO LA CREDENTIAL DEFINITION");
@@ -39,7 +39,7 @@ console.log(readedSchema)
             walletHandle,
             issuerDid,
             readedSchema,
-             tag,
+            'TAG1',
             'CL',
             '{"support_revocation": false}'
         );
