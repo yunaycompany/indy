@@ -2,7 +2,7 @@
   <main class="main main-cards">
     <b-alert show>Crear Esquema</b-alert>
     <div class="card mb-2">
-      <b-form @submit="onSubmit" v-if="show">
+      <b-form @submit="onSubmit" v-if="show" class="form-schema">
         <b-form-group
           id="schemaName"
           label="Nombre del Esquema:"
@@ -106,13 +106,16 @@ export default {
   margin-left: 20px;
   margin-top: 20px;
 }
+.form-schema{
+  min-height: 500px;
+}
 
 .card {
   display: flex;
   flex-direction: column;
   border: none;
 
-  min-height: 300px;
+  min-height: 500px;
   width: 100%;
 }
 </style>

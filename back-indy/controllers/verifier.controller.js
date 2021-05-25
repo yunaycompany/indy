@@ -9,6 +9,9 @@ exports.createProofRequest = async (req, res, next) => {
     var body = req.body;
     try {
         
+        if (!body.name) {credDefId
+            throw new BadRequest('Name of proof is required');
+        }
         if (!body.credDefId) {
             throw new BadRequest('Credential Definition ID is required');
         }
@@ -18,10 +21,16 @@ exports.createProofRequest = async (req, res, next) => {
         if (!body.masterSecretId) {
             throw new BadRequest('Master Secret ID is required');
         }
+        if (!body.attributes) {
+            throw new BadRequest('Attributes are required');
+        }
 
         const credDefId = body.credDefId
         const masterSecretId = body.masterSecretId
         const holderDid = body.holderDid
+        const nameOfRequest = body.name
+
+        const attributes = body.attributes
        
         const poolHandle = await pool
 
@@ -31,10 +40,11 @@ exports.createProofRequest = async (req, res, next) => {
         nonce = await indy.generateNonce();
         let proofRequest = {
             'nonce': nonce,
-            'name': 'Proof-Request',
+            'name': nameOfRequest,
             'version': '0.2',
             'ver': '1.0',
-            'requested_attributes': {
+            'requested_attributes': attributes,
+            /*{
                 'attr1_referent': {
                     'name': 'first_name',
                     'restrictions': [{ 'cred_def_id': credDefId }]
@@ -48,7 +58,7 @@ exports.createProofRequest = async (req, res, next) => {
                     'restrictions': [{ 'cred_def_id': credDefId }]
                 }
 
-            },
+            },*/
             'requested_predicates': {
                 /*'predicate1_referent': {
                     'name': 'salary',
@@ -99,15 +109,16 @@ exports.verifiy = async (req, res, next) => {
         if (!body.proofData) {
             throw new BadRequest('Proof Data is required');
         }
-        if (!body.credDefId) {
+        if (!body.name) {
             throw new BadRequest('Credential Definition ID is required');
         }
 
         const proofData = body.proofData
         const verifierDid = body.verifierDid
-        const credDefId = body.credDefId
+        const nameOfRequest  = body.name
         const nonce = body.nonce
         const poolHandle = await pool
+        const attributes = body.attributes
         
         
         // una vez creada, se enviara la prueba al verifier para que la procese
@@ -122,24 +133,10 @@ exports.verifiy = async (req, res, next) => {
             //move to body params
         let proofRequest = {
             'nonce': nonce,
-            'name': 'Proof-Request',
+            'name': nameOfRequest,
             'version': '0.2',
             'ver': '1.0',
-            'requested_attributes': {
-                'attr1_referent': {
-                    'name': 'first_name',
-                    'restrictions': [{ 'cred_def_id': credDefId }]
-                },
-                'attr2_referent': {
-                    'name': 'last_name',
-                    'restrictions': [{ 'cred_def_id': credDefId }]
-                },
-                'attr3_referent': {
-                    'name': 'employee_status',
-                    'restrictions': [{ 'cred_def_id': credDefId }]
-                }
-
-            },
+            'requested_attributes': attributes,
             'requested_predicates': {
                 /*'predicate1_referent': {
                     'name': 'salary',

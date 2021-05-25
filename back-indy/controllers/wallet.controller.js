@@ -35,13 +35,6 @@ exports.createWallet = async (req, res, next) => {
                 const [issuerDid, verkey] = await indy.createAndStoreMyDid(wallethandle, stewardDidInfo);
                 did = issuerDid
                 key = verkey
-
-                let didMeta = JSON.stringify({
-                    primary: true,
-                    schemas: [],
-                    credential_definitions: []
-                });
-                await indy.setDidMetadata(wallethandle, did, didMeta);
                 break;
             default:
                 break;

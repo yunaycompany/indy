@@ -22,17 +22,17 @@ exports.createSchema = async (req, res, next) => {
         const poolHandle = await pool
         const issuerDid = body.did
         const walletHandle = body.walletHandle 
-        const schemaName = body.name//'Job-Certificate',
-        const schemaAttributes = body.attributes
-        /*[
+        const schemaName = 'Job-Certificate',
+         schemaAttributes = 
+        [
             'first_name',
             'last_name',
             'salary',
             'employee_status',
             'experience'
-        ]*/
+        ]
 
-        const version =body.version?body.version: randomVersion();
+        const version =randomVersion();
         const [schemaId, schema] = await indy.issuerCreateSchema(
             issuerDid,
             schemaName,
@@ -46,7 +46,6 @@ exports.createSchema = async (req, res, next) => {
         console.log("REGISTRANDO SCHEMA EN LA RED")
         const result = await connection.sendSchema(poolHandle, walletHandle, issuerDid, schema);
         console.log(result);
-        await connection.pushEndpointDidAttribute(walletHandle,issuerDid, schemaId,'schemas');
         const response = {
             schemaId: schemaId,
             schema: schema,

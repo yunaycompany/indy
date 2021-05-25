@@ -13,20 +13,25 @@ exports.createCredentialDefinition = async (req, res, next) => {
         if (!body.did) {
             throw new BadRequest('Issuer Did is required');
         }
+
+        if (!body.tag) {
+            throw new BadRequest('Tag is required');
+        }
         
         if (!body.schemaId) {
             throw new BadRequest('Wallet Schema is required');
         }
 
         const poolHandle = await pool
-        const issuerDid = body.credDefId
+        const issuerDid = body.did
         const schemaId = body.schemaId
+        const tag = body.tag
 
 
         const walletHandle = body.walletHandle 
         
         const [, readedSchema] = await connection.getSchema(poolHandle, issuerDid, schemaId);
-
+console.log(readedSchema)
         // register the credential definition
         
         console.log("CREANDO LA CREDENTIAL DEFINITION");
@@ -34,7 +39,7 @@ exports.createCredentialDefinition = async (req, res, next) => {
             walletHandle,
             issuerDid,
             readedSchema,
-            'TAG1',
+             tag,
             'CL',
             '{"support_revocation": false}'
         );
