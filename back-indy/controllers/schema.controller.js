@@ -25,7 +25,7 @@ exports.createSchema = async (req, res, next) => {
         const schemaAttributes = body.attributes
         
         console.log(schemaAttributes)
-        const version =body.version? body.version: randomVersion();
+        const version =randomVersion();
         const [schemaId, schema] = await indy.issuerCreateSchema(
             issuerDid,
             schemaName,
