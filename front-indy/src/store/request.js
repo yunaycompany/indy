@@ -10,6 +10,7 @@ const actions = {
         commit('createMasterRequestRequest')
         return requestService.createMasterRequest({}).then(
             response => {
+                console.log(data)
                 commit('createMasterRequestSuccess', response)
                 data.masterSecretId = response.masterSecretId
                 dispatch('createCredentialRequest', data)

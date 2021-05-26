@@ -15,7 +15,6 @@ const router = express.Router();
 router.post("/wallet", walletController.createWallet);
 router.post("/login", walletController.loginWallet);
 router.post("/logout", walletController.logoutWallet);
-router.post("/masterRequest", walletController.createMasterRequest);
 
 
 //Schema
@@ -26,7 +25,8 @@ router.get("/schema/:schemaId/:did", schemaController.getSchema);
 //Credential
 router.post("/credentialDefinition", credentialController.createCredentialDefinition);
 router.post("/credentialOffer", credentialController.createCredentialOffer);
-router.post("/credentialRequest", credentialController.createCredentialRequest);
+router.post("/masterRequest", credentialController.createMasterRequest);
+router.post("/credentialRequest", credentialController.createCredentialRequestAccept);
 router.post("/credential", credentialController.createCredential);
 router.post("/credential/store", credentialController.holderStoreCredential);
 

@@ -40,6 +40,7 @@
             rows="3"
             max-rows="6"
           ></b-form-textarea>
+            <b-form-tags input-id="tags-basic" v-model="form.attributes"></b-form-tags>
         </b-form-group>
 
         <div class="mt-4">

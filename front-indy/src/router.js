@@ -31,11 +31,6 @@ const router = new VueRouter({
             component: () => import('./components/Credential.vue')
         },
         {
-            path: '/request',
-            name: 'request',
-            component: () => import('./components/Request.vue')
-        },
-        {
             path: '/verify',
             name: 'verify',
             component: () => import('./components/Verify.vue')

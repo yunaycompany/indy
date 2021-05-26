@@ -100,26 +100,3 @@ exports.logoutWallet = async (req, res, next) => {
         next(e)
     }
 }
-
-exports.createMasterRequest = async (req, res, next) => {
-    try {
-
-        const walletHandle = req.session.walletHandle
-
-        const masterSecretId = await indy.proverCreateMasterSecret(
-            walletHandle, //Holder
-            null
-        );
-        console.log("HOLDER: MASTER SECRET ID")
-        console.log(masterSecretId);
-
-        const response = {
-            masterSecretId: masterSecretId,
-            status: true
-        }
-
-        res.status(200).send(response);
-    } catch (e) {
-        next(e)
-    }
-}

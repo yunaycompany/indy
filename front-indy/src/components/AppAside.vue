@@ -16,9 +16,6 @@
       <router-link to="/credential" tag="li" class="sidenav__list-item">
         Credenciales
       </router-link>
-      <router-link to="/request" tag="li" class="sidenav__list-item">
-        Peticiones
-      </router-link>
       <router-link to="/verify" tag="li" class="sidenav__list-item">
         Verificar
       </router-link>

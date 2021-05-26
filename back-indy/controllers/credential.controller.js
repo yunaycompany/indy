@@ -23,7 +23,7 @@ exports.createCredentialDefinition = async (req, res, next) => {
         }
 
         const poolHandle = await pool
-        const issuerDid = body.credDefId
+        const issuerDid = body.did
         const schemaId = body.schemaId
         const tag = body.tag
 
@@ -78,8 +78,6 @@ exports.createCredentialOffer = async(req, res, next) =>{
 
         
         const credDefId = body.credDefId
-
-
         const walletHandle = body.walletHandle 
 
         console.log("CREANDO LA OFERTA DEL CREDENCIAL PARA EL USUARIO")
@@ -104,7 +102,29 @@ exports.createCredentialOffer = async(req, res, next) =>{
     }
 }
 
-exports.createCredentialRequest = async(req, res, next)=>{
+exports.createMasterRequest = async (req, res, next) => {
+    try {
+
+        const walletHandle = req.session.walletHandle
+
+        const masterSecretId = await indy.proverCreateMasterSecret(
+            walletHandle, //Holder
+            null
+        );
+        console.log("HOLDER: MASTER SECRET ID")
+        console.log(masterSecretId);
+
+        const response = {
+            masterSecretId: masterSecretId,
+            status: true
+        }
+
+        res.status(200).send(response);
+    } catch (e) {
+        next(e)
+    }
+}
+exports.createCredentialRequestAccept = async(req, res, next)=>{
     var body = req.body;
     try {
 
@@ -235,10 +255,6 @@ exports.holderStoreCredential = async(req, res, next)=>{
         const credReqMetadata = body.credReqMetadata
         const defJson = body.defJson
         const credentialData =body.credentialData
-
-
-
-
         const walletHandle = body.walletHandle 
        // ahora que la credencial esta creada,
        // se le envia al usuario para que la verifique y la guarde en su wallet
