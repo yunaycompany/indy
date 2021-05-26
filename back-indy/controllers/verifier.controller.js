@@ -9,7 +9,7 @@ exports.createProofRequest = async (req, res, next) => {
     var body = req.body;
     try {
         
-        if (!body.name) {credDefId
+        if (!body.name) {
             throw new BadRequest('Name of proof is required');
         }
         if (!body.credDefId) {
@@ -40,11 +40,10 @@ exports.createProofRequest = async (req, res, next) => {
         nonce = await indy.generateNonce();
         let proofRequest = {
             'nonce': nonce,
-            'name': nameOfRequest,
+            'name': 'Proof-Request',
             'version': '0.2',
             'ver': '1.0',
-            'requested_attributes': attributes,
-            /*{
+            'requested_attributes':{
                 'attr1_referent': {
                     'name': 'first_name',
                     'restrictions': [{ 'cred_def_id': credDefId }]
@@ -58,7 +57,7 @@ exports.createProofRequest = async (req, res, next) => {
                     'restrictions': [{ 'cred_def_id': credDefId }]
                 }
 
-            },*/
+            },
             'requested_predicates': {
                 /*'predicate1_referent': {
                     'name': 'salary',
@@ -110,9 +109,9 @@ exports.verifiy = async (req, res, next) => {
             throw new BadRequest('Proof Data is required');
         }
         if (!body.name) {
-            throw new BadRequest('Credential Definition ID is required');
+            throw new BadRequest('Name of Proof Required');
         }
-
+        const credDefId = body.credDefId  
         const proofData = body.proofData
         const verifierDid = body.verifierDid
         const nameOfRequest  = body.name
@@ -133,10 +132,24 @@ exports.verifiy = async (req, res, next) => {
             //move to body params
         let proofRequest = {
             'nonce': nonce,
-            'name': nameOfRequest,
+            'name': 'Proof-Request',
             'version': '0.2',
             'ver': '1.0',
-            'requested_attributes': attributes,
+            'requested_attributes': {
+                'attr1_referent': {
+                    'name': 'first_name',
+                    'restrictions': [{ 'cred_def_id': credDefId }]
+                },
+                'attr2_referent': {
+                    'name': 'last_name',
+                    'restrictions': [{ 'cred_def_id': credDefId }]
+                },
+                'attr3_referent': {
+                    'name': 'employee_status',
+                    'restrictions': [{ 'cred_def_id': credDefId }]
+                }
+
+            },/*attributes*/
             'requested_predicates': {
                 /*'predicate1_referent': {
                     'name': 'salary',
