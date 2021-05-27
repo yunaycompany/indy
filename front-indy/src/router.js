@@ -13,7 +13,7 @@ const router = new VueRouter({
         {
             path: '/',
             name: 'home',
-            component: () => import('./components/AppMain.vue')
+            component: () => import('./components/Wallet.vue')
         },
         {
             path: '/wallet',

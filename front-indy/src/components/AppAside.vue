@@ -4,10 +4,7 @@
       <i class="fas fa-times sidenav__brand-close"></i>
     </div>
     <ul class="sidenav__list">
-      <router-link to="/" tag="li" class="sidenav__list-item">
-        Inicio
-      </router-link>
-      <router-link to="/wallet" tag="li"  class="sidenav__list-item">
+      <router-link to="/" tag="li"  class="sidenav__list-item">
         Wallet
       </router-link>
       <router-link to="/schema" tag="li" class="sidenav__list-item">

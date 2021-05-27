@@ -5,7 +5,7 @@ import ax from 'axios'
 
 const axios = ax.create({
     timeout: 0,
-    baseURL: 'http://localhost:5900/api/',
+    baseURL: 'http://ec2-18-228-165-209.sa-east-1.compute.amazonaws.com/api/',
     headers: {
         'Content-Type': 'application/json'
     }

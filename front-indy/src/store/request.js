@@ -8,7 +8,7 @@ const state = {
 const actions = {
     createMasterRequest({commit, dispatch}, data) {
         commit('createMasterRequestRequest')
-        return requestService.createMasterRequest({}).then(
+        return requestService.createMasterRequest(data).then(
             response => {
                 console.log(data)
                 commit('createMasterRequestSuccess', response)

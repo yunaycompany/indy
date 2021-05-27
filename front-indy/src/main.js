@@ -9,7 +9,9 @@ axios.defaults.withCredentials = true;
 import VueAxios from 'vue-axios'
 Vue.use(VueAxios, axios)
 Vue.config.productionTip = false
+import VJsoneditor from 'v-jsoneditor/src/index'
 
+Vue.use(VJsoneditor)
 import { BootstrapVue, IconsPlugin } from 'bootstrap-vue'
 
 
