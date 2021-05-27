@@ -22,8 +22,14 @@ exports.createSchema = async (req, res, next) => {
         const issuerDid = body.did
         const walletHandle = body.walletHandle 
         const schemaName = body.name
-        const schemaAttributes = body.attributes
-        
+        let schemaAttributes = body.attributes
+        schemaAttributes=[
+                'first_name',
+                'last_name',
+                'salary',
+                'employee_status',
+                'experience'
+            ];
         console.log(schemaAttributes)
         const version =randomVersion();
         const [schemaId, schema] = await indy.issuerCreateSchema(

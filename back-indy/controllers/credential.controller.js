@@ -104,8 +104,8 @@ exports.createCredentialOffer = async(req, res, next) =>{
 
 exports.createMasterRequest = async (req, res, next) => {
     try {
-
-        const walletHandle = req.session.walletHandle
+	 var body = req.body;
+        const walletHandle= body.walletHandle 
 
         const masterSecretId = await indy.proverCreateMasterSecret(
             walletHandle, //Holder
