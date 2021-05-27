@@ -1,6 +1,6 @@
 {
 	"info": {
-		"_postman_id": "9590244e-4835-4a04-aaa2-128820632440",
+		"_postman_id": "95ce50cd-c6e7-41ea-a26a-dcd476b199ff",
 		"name": "indy",
 		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
 	},
@@ -66,12 +66,14 @@
 							"raw": "{\n    \"name\": \"{{WALLET_NAME_ISSUER}}\",\n    \"password\": \"{{WALLET_PASSWORD}}\",\n    \"type\": \"{{WALLET_TYPE_ISSUER}}\"\n}"
 						},
 						"url": {
-							"raw": "http://localhost:5900/api/wallet",
+							"raw": "http://18.228.165.209/api/wallet",
 							"protocol": "http",
 							"host": [
-								"localhost"
+								"18",
+								"228",
+								"165",
+								"209"
 							],
-							"port": "5900",
 							"path": [
 								"api",
 								"wallet"
@@ -87,6 +89,32 @@
 							"listen": "test",
 							"script": {
 								"exec": [
+									"pm.test(\"Content-Type header is present\", function () {",
+									"    pm.response.to.have.header(\"Content-Type\");",
+									"});",
+									"",
+									"pm.test(\"Status test\", function () {",
+									"    pm.response.to.have.status(200);",
+									"});",
+									"",
+									"pm.test(\"Response must be valid and have a body\", function () {",
+									"    pm.response.to.be.ok;",
+									"    pm.response.to.be.withBody;",
+									"    pm.response.to.be.json;",
+									"});",
+									"",
+									"var jsonData = pm.response.json();",
+									"",
+									"",
+									"pm.test(\"DID, Key is not empty\", function () {",
+									"    var walletHandle = jsonData.walletHandle;",
+									"    if(walletHandle) {",
+									"      pm.environment.set(\"WALLET_HANDLE_ISSUER\",walletHandle);",
+									"    }",
+									"    ",
+									"",
+									"});",
+									"",
 									""
 								],
 								"type": "text/javascript"
@@ -107,12 +135,14 @@
 							"raw": "{\n    \"name\": \"{{WALLET_NAME_ISSUER}}\",\n    \"password\": \"{{WALLET_PASSWORD}}\"\n}"
 						},
 						"url": {
-							"raw": "http://localhost:5900/api/login",
+							"raw": "http://18.228.165.209/api/login",
 							"protocol": "http",
 							"host": [
-								"localhost"
+								"18",
+								"228",
+								"165",
+								"209"
 							],
-							"port": "5900",
 							"path": [
 								"api",
 								"login"
@@ -171,15 +201,17 @@
 						],
 						"body": {
 							"mode": "raw",
-							"raw": "{\n    \"name\": \"Job-Certificate\",\n    \"walletHandle\": 22,\n    \"did\": \"{{DID_ISSUER}}\",\n    \"version\": \"21\",\n    \"attributes\": [\n        \"first_name\",\n            \"last_name\",\n            \"salary\",\n            \"employee_status\",\n            \"experience\"\n    ]\n}"
+							"raw": "{\n    \"name\": \"Job-Certificate\",\n    \"walletHandle\": {{WALLET_HANDLE_ISSUER}},\n    \"did\": \"{{DID_ISSUER}}\",\n    \"version\": \"24\",\n    \"attributes\": [\n        \"first_name\",\n            \"last_name\",\n            \"salary\",\n            \"employee_status\",\n            \"experience\"\n    ]\n}"
 						},
 						"url": {
-							"raw": "http://localhost:5900/api/schema",
+							"raw": "http://18.228.165.209/api/schema",
 							"protocol": "http",
 							"host": [
-								"localhost"
+								"18",
+								"228",
+								"165",
+								"209"
 							],
-							"port": "5900",
 							"path": [
 								"api",
 								"schema"
@@ -237,12 +269,14 @@
 							}
 						],
 						"url": {
-							"raw": "http://localhost:5900/api/schema/{{SCHEMAID}}/{{DID_ISSUER}}",
+							"raw": "http://18.228.165.209/api/schema/{{SCHEMAID}}/{{DID_ISSUER}}",
 							"protocol": "http",
 							"host": [
-								"localhost"
+								"18",
+								"228",
+								"165",
+								"209"
 							],
-							"port": "5900",
 							"path": [
 								"api",
 								"schema",
@@ -349,15 +383,17 @@
 						],
 						"body": {
 							"mode": "raw",
-							"raw": "{\n    \"did\": \"{{DID_ISSUER}}\",\n    \"schemaId\": \"{{SCHEMAID}}\",\n    \"walletHandle\": 22,\n    \"tag\": \"tag1\"\n}"
+							"raw": "{\n    \"did\": \"{{DID_ISSUER}}\",\n    \"schemaId\": \"{{SCHEMAID}}\",\n    \"walletHandle\": {{WALLET_HANDLE_ISSUER}},\n    \"tag\": \"TAG1\"\n}"
 						},
 						"url": {
-							"raw": "http://localhost:5900/api/credentialDefinition",
+							"raw": "http://18.228.165.209/api/credentialDefinition",
 							"protocol": "http",
 							"host": [
-								"localhost"
+								"18",
+								"228",
+								"165",
+								"209"
 							],
-							"port": "5900",
 							"path": [
 								"api",
 								"credentialDefinition"
@@ -416,15 +452,17 @@
 						],
 						"body": {
 							"mode": "raw",
-							"raw": "{\n    \"credDefId\": \"{{CRED_DEFINITION_ID}}\"\n}"
+							"raw": "{\n    \"credDefId\": \"{{CRED_DEFINITION_ID}}\",\n    \"walletHandle\": {{WALLET_HANDLE_ISSUER}}\n\n}"
 						},
 						"url": {
-							"raw": "http://localhost:5900/api/credentialOffer",
+							"raw": "http://18.228.165.209/api/credentialOffer",
 							"protocol": "http",
 							"host": [
-								"localhost"
+								"18",
+								"228",
+								"165",
+								"209"
 							],
-							"port": "5900",
 							"path": [
 								"api",
 								"credentialOffer"
@@ -478,8 +516,10 @@
 									"",
 									"var credRequest = pm.variables.get(\"CRED_REQUEST\");",
 									"var credOffer = pm.variables.get(\"CRED_OFFER\");",
+									"const walletHandle =Number(pm.variables.get(\"WALLET_HANDLE_ISSUER\")) ;",
 									"",
 									"var body =  {",
+									"    \"walletHandle\": walletHandle,",
 									"    \"credOffer\":  JSON.parse(credOffer),",
 									"    \"credReq\":  JSON.parse(credRequest),",
 									"}",
@@ -501,15 +541,17 @@
 						],
 						"body": {
 							"mode": "raw",
-							"raw": "{{BODY_CREDENTIAL}}\n//issuer..."
+							"raw": "{{BODY_CREDENTIAL}}"
 						},
 						"url": {
-							"raw": "http://localhost:5900/api/credential",
+							"raw": "http://18.228.165.209/api/credential",
 							"protocol": "http",
 							"host": [
-								"localhost"
+								"18",
+								"228",
+								"165",
+								"209"
 							],
-							"port": "5900",
 							"path": [
 								"api",
 								"credential"
@@ -581,15 +623,86 @@
 							"raw": "{\n    \"name\": \"{{WALLET_NAME_HOLDER}}\",\n    \"password\": \"{{WALLET_PASSWORD}}\",\n    \"type\": \"{{WALLET_TYPE_HOLDER}}\"\n}"
 						},
 						"url": {
-							"raw": "http://localhost:5900/api/wallet",
+							"raw": "http://18.228.165.209/api/wallet",
 							"protocol": "http",
 							"host": [
-								"localhost"
+								"18",
+								"228",
+								"165",
+								"209"
 							],
-							"port": "5900",
 							"path": [
 								"api",
 								"wallet"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "login",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Content-Type header is present\", function () {",
+									"    pm.response.to.have.header(\"Content-Type\");",
+									"});",
+									"",
+									"pm.test(\"Status test\", function () {",
+									"    pm.response.to.have.status(200);",
+									"});",
+									"",
+									"pm.test(\"Response must be valid and have a body\", function () {",
+									"    pm.response.to.be.ok;",
+									"    pm.response.to.be.withBody;",
+									"    pm.response.to.be.json;",
+									"});",
+									"",
+									"var jsonData = pm.response.json();",
+									"",
+									"",
+									"pm.test(\"DID, Key is not empty\", function () {",
+									"    var walletHandle = jsonData.walletHandle;",
+									"    if(walletHandle) {",
+									"      pm.environment.set(\"WALLET_HANDLE_HOLDER\", walletHandle);",
+									"    }",
+									"    ",
+									"",
+									"});",
+									"",
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"type": "text",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"name\": \"{{WALLET_NAME_HOLDER}}\",\n    \"password\": \"{{WALLET_PASSWORD}}\"\n}"
+						},
+						"url": {
+							"raw": "http://18.228.165.209/api/login",
+							"protocol": "http",
+							"host": [
+								"18",
+								"228",
+								"165",
+								"209"
+							],
+							"path": [
+								"api",
+								"login"
 							]
 						}
 					},
@@ -645,15 +758,17 @@
 						],
 						"body": {
 							"mode": "raw",
-							"raw": "{\n  \n}"
+							"raw": "{\n  \"walletHandle\": {{WALLET_HANDLE_HOLDER}}\n}"
 						},
 						"url": {
-							"raw": "http://localhost:5900/api/masterRequest",
+							"raw": "http://18.228.165.209/api/masterRequest",
 							"protocol": "http",
 							"host": [
-								"localhost"
+								"18",
+								"228",
+								"165",
+								"209"
 							],
-							"port": "5900",
 							"path": [
 								"api",
 								"masterRequest"
@@ -714,8 +829,10 @@
 									"var masterSecretId = pm.variables.get(\"MASTER_SECRET_ID\");",
 									"var credOffer = pm.variables.get(\"CRED_OFFER\");",
 									"var defJson = pm.variables.get(\"CRED_DEFINITION_JSON\");",
+									"const walletHandle =Number(pm.variables.get(\"WALLET_HANDLE_HOLDER\")) ;",
 									"",
 									"var body =  {",
+									"    \"walletHandle\": walletHandle,",
 									"    \"holderDID\": holderDID,",
 									"    \"masterSecretId\": masterSecretId,",
 									"    \"credOffer\": JSON.parse(credOffer),",
@@ -742,12 +859,14 @@
 							"raw": "{{BODY_CREDENTIAL_REQUEST}}"
 						},
 						"url": {
-							"raw": "http://localhost:5900/api/credentialRequest",
+							"raw": "http://18.228.165.209/api/credentialRequest",
 							"protocol": "http",
 							"host": [
-								"localhost"
+								"18",
+								"228",
+								"165",
+								"209"
 							],
-							"port": "5900",
 							"path": [
 								"api",
 								"credentialRequest"
@@ -803,8 +922,9 @@
 									"var credRequestMetaData = pm.variables.get(\"CRED_REQUEST_METADATA\");",
 									"var credDefinitionJson = pm.variables.get(\"CRED_DEFINITION_JSON\");",
 									"var credData = pm.variables.get(\"CRED_DATA\");",
-									"",
+									"const walletHandle =Number(pm.variables.get(\"WALLET_HANDLE_HOLDER\")) ;",
 									"var body =  {",
+									"    walletHandle: walletHandle,",
 									"    \"credReqMetadata\":  JSON.parse(credRequestMetaData),",
 									"    \"defJson\": JSON.parse(credDefinitionJson),",
 									"    \"credentialData\": JSON.parse(credData)",
@@ -830,12 +950,14 @@
 							"raw": "{{BODY_CREDENTIAL_STORE}}"
 						},
 						"url": {
-							"raw": "http://localhost:5900/api/credential/store",
+							"raw": "http://18.228.165.209/api/credential/store",
 							"protocol": "http",
 							"host": [
-								"localhost"
+								"18",
+								"228",
+								"165",
+								"209"
 							],
-							"port": "5900",
 							"path": [
 								"api",
 								"credential",
@@ -846,12 +968,43 @@
 					"response": []
 				},
 				{
-					"name": "login",
+					"name": "12. create Proof Request",
 					"event": [
 						{
 							"listen": "test",
 							"script": {
 								"exec": [
+									"pm.test(\"Content-Type header is present\", function () {",
+									"    pm.response.to.have.header(\"Content-Type\");",
+									"});",
+									"",
+									"pm.test(\"Status test\", function () {",
+									"    pm.response.to.have.status(200);",
+									"});",
+									"",
+									"pm.test(\"Response must be valid and have a body\", function () {",
+									"    pm.response.to.be.ok;",
+									"    pm.response.to.be.withBody;",
+									"    pm.response.to.be.json;",
+									"});",
+									"",
+									"var jsonData = pm.response.json();",
+									"",
+									"",
+									"pm.test(\"DID, Key is not empty\", function () {",
+									"    var proofData = jsonData.proofData;",
+									"    pm.expect(proofData).to.not.be.empty;",
+									"    if(proofData) {",
+									"      pm.environment.set(\"PROOF_DATA\", JSON.stringify(proofData));",
+									"    }",
+									" var nonce = jsonData.nonce;",
+									"    pm.expect(nonce).to.not.be.empty;",
+									"    if(nonce) {",
+									"      pm.environment.set(\"PROOF_NONCE\", nonce);",
+									"    }",
+									"",
+									"});",
+									"",
 									""
 								],
 								"type": "text/javascript"
@@ -869,18 +1022,20 @@
 						],
 						"body": {
 							"mode": "raw",
-							"raw": "{\n    \"name\": \"{{WALLET_NAME_HOLDER}}\",\n    \"password\": \"{{WALLET_PASSWORD}}\"\n}"
+							"raw": "{\n    \"walletHandle\": {{WALLET_HANDLE_HOLDER}},\n    \"credDefId\": \"{{CRED_DEFINITION_ID}}\",\n    \"holderDid\": \"{{DID_HOLDER}}\",\n    \"masterSecretId\": \"{{MASTER_SECRET_ID}}\",\n    \"name\": \"Proof-Request\",\n    \"attributes\": {\n        \"attr1_referent\": {\n            \"name\": \"first_name\",\n            \"restrictions\": [\n                {\n                    \"cred_def_id\": \"{{CRED_DEFINITION_ID}}\"\n                }\n            ]\n        },\n        \"attr2_referent\": {\n            \"name\": \"last_name\",\n            \"restrictions\": [\n                {\n                    \"cred_def_id\": \"{{CRED_DEFINITION_ID}}\"\n                }\n            ]\n        },\n        \"attr3_referent\": {\n            \"name\": \"employee_status\",\n            \"restrictions\": [\n                {\n                    \"cred_def_id\": \"{{CRED_DEFINITION_ID}}\"\n                }\n            ]\n        }\n    }\n}"
 						},
 						"url": {
-							"raw": "http://localhost:5900/api/login",
+							"raw": "http://18.228.165.209/api/proof",
 							"protocol": "http",
 							"host": [
-								"localhost"
+								"18",
+								"228",
+								"165",
+								"209"
 							],
-							"port": "5900",
 							"path": [
 								"api",
-								"login"
+								"proof"
 							]
 						}
 					},
@@ -949,12 +1104,14 @@
 							"raw": "{\n    \"name\": \"{{WALLET_NAME_VERIFIER}}\",\n    \"password\": \"{{WALLET_PASSWORD}}\",\n    \"type\": \"{{WALLET_TYPE_VERIFIER}}\"\n}"
 						},
 						"url": {
-							"raw": "http://localhost:5900/api/wallet",
+							"raw": "http://18.228.165.209/api/wallet",
 							"protocol": "http",
 							"host": [
-								"localhost"
+								"18",
+								"228",
+								"165",
+								"209"
 							],
-							"port": "5900",
 							"path": [
 								"api",
 								"wallet"
@@ -964,7 +1121,7 @@
 					"response": []
 				},
 				{
-					"name": "12. create Proof Request",
+					"name": "login",
 					"event": [
 						{
 							"listen": "test",
@@ -987,20 +1144,24 @@
 									"var jsonData = pm.response.json();",
 									"",
 									"",
-									"pm.test(\"DID, Key is not empty\", function () {",
-									"    var proofData = jsonData.proofData;",
-									"    pm.expect(proofData).to.not.be.empty;",
-									"    if(proofData) {",
-									"      pm.environment.set(\"PROOF_DATA\", JSON.stringify(proofData));",
+									"pm.test(\"Handle, Key is not empty\", function () {",
+									"    var walletHandle = jsonData.walletHandle;",
+									"    if(walletHandle) {",
+									"      pm.environment.set(\"WALLET_HANDLE_VERIFIER\",walletHandle);",
 									"    }",
-									" var nonce = jsonData.nonce;",
-									"    pm.expect(nonce).to.not.be.empty;",
-									"    if(nonce) {",
-									"      pm.environment.set(\"PROOF_NONCE\", nonce);",
-									"    }",
+									"    ",
 									"",
 									"});",
 									"",
+									""
+								],
+								"type": "text/javascript"
+							}
+						},
+						{
+							"listen": "prerequest",
+							"script": {
+								"exec": [
 									""
 								],
 								"type": "text/javascript"
@@ -1018,18 +1179,20 @@
 						],
 						"body": {
 							"mode": "raw",
-							"raw": "{\n    \"credDefId\": \"{{CRED_DEFINITION_ID}}\",\n    \"holderDid\": \"{{DID_HOLDER}}\",\n    \"masterSecretId\": \"{{MASTER_SECRET_ID}}\",\n    \"name\": \"Proof-Request\",\n    \"attributes\": {\n                \"attr1_referent\": {\n                    \"name\": \"first_name\",\n                    \"restrictions\": [{ \"cred_def_id\": {{CRED_DEFINITION_ID}} }]\n                },\n                \"attr2_referent\": {\n                    \"name\": \"last_name\",\n                    \"restrictions\": [{ \"cred_def_id\": {{CRED_DEFINITION_ID}}  }]\n                },\n                \"attr3_referent\": {\n                    \"name\": \"employee_status\",\n                    \"restrictions\": [{ \"cred_def_id\": {{CRED_DEFINITION_ID}}  }]\n                }\n\n            }\n}"
+							"raw": "{\n    \"name\": \"{{WALLET_NAME_VERIFIER}}\",\n    \"password\": \"{{WALLET_PASSWORD}}\"\n}"
 						},
 						"url": {
-							"raw": "http://localhost:5900/api/proof",
+							"raw": "http://18.228.165.209/api/login",
 							"protocol": "http",
 							"host": [
-								"localhost"
+								"18",
+								"228",
+								"165",
+								"209"
 							],
-							"port": "5900",
 							"path": [
 								"api",
-								"proof"
+								"login"
 							]
 						}
 					},
@@ -1061,6 +1224,7 @@
 									"    \"verifierDid\": verifierDid,",
 									"    \"credDefId\": credDefId,",
 									"    \"nonce\": nonce,",
+									"    \"name\": \"Proof-Request\",",
 									"    \"proofData\": JSON.parse(proofData)",
 									"}",
 									"pm.variables.set(\"BODY_VERIFY\",JSON.stringify(body) );",
@@ -1084,56 +1248,17 @@
 							"raw": "{{BODY_VERIFY}}"
 						},
 						"url": {
-							"raw": "http://localhost:5900/api/verify",
+							"raw": "http://18.228.165.209/api/verify",
 							"protocol": "http",
 							"host": [
-								"localhost"
+								"18",
+								"228",
+								"165",
+								"209"
 							],
-							"port": "5900",
 							"path": [
 								"api",
 								"verify"
-							]
-						}
-					},
-					"response": []
-				},
-				{
-					"name": "login",
-					"event": [
-						{
-							"listen": "test",
-							"script": {
-								"exec": [
-									""
-								],
-								"type": "text/javascript"
-							}
-						}
-					],
-					"request": {
-						"method": "POST",
-						"header": [
-							{
-								"key": "Content-Type",
-								"type": "text",
-								"value": "application/json"
-							}
-						],
-						"body": {
-							"mode": "raw",
-							"raw": "{\n    \"name\": \"{{WALLET_NAME_VERIFIER}}\",\n    \"password\": \"{{WALLET_PASSWORD}}\"\n}"
-						},
-						"url": {
-							"raw": "http://localhost:5900/api/login",
-							"protocol": "http",
-							"host": [
-								"localhost"
-							],
-							"port": "5900",
-							"path": [
-								"api",
-								"login"
 							]
 						}
 					},

@@ -13,6 +13,14 @@
                   required
               ></b-form-input>
             </b-form-group>
+            <b-form-group id="nonce" label="Nonce:" label-for="nonce">
+              <b-form-input
+                  id="nonce"
+                  type="text"
+                  v-model="form.nonce"
+                  required
+              ></b-form-input>
+            </b-form-group>
 
             <b-form-group
                 id="credDefId"
@@ -38,6 +46,19 @@
                   v-model="form.masterSecretId"
                   required
               ></b-form-input>
+            </b-form-group>
+            <b-form-group
+                id="proofData"
+                label="Prueba de Datos:"
+                label-for="proofData"
+            >
+              <b-form-textarea
+                  id="credReq"
+                  v-model="form.proofData"
+                  rows="3"
+                  required
+                  max-rows="6"
+              ></b-form-textarea>
             </b-form-group>
 
             <b-form-group id="attributes" label="Atributos:" label-for="attributes">
@@ -86,6 +107,7 @@ export default {
         masterSecretId: "",
         credDefId: "",
         proofData: "",
+        nonce: "",
         attributes: {
           attr1_referent: {
             name: "first_name",
@@ -125,8 +147,6 @@ export default {
   methods: {
     verifyProof(event) {
       event.preventDefault();
-      this.form.walletHandle =
-          this.user && this.user.user ? this.user.user.walletHandle : "";
       this.form.verifierDid =
           this.user && this.user.wallet ? this.user.wallet.DID : "";
       this.$store.dispatch("verify/verify", this.form);

@@ -3,11 +3,11 @@ const user = require('../helpers/user');
 const pool = require('../helpers/pool')
 const encoder = require('../helpers/encoder.js');
 const connection = require('../helpers/connection.js');
-const { BadRequest, NotFound, ApiError } = require('../helpers/error')
+const { BadRequest } = require('../helpers/error')
 
 
 exports.createCredentialDefinition = async (req, res, next) => {
-    var body = req.body;
+    const body = req.body;
     try {
 
         if (!body.did) {
@@ -33,13 +33,12 @@ exports.createCredentialDefinition = async (req, res, next) => {
         const [, readedSchema] = await connection.getSchema(poolHandle, issuerDid, schemaId);
 
         // register the credential definition
-        
         console.log("CREANDO LA CREDENTIAL DEFINITION");
         const [credDefId, defJson] = await indy.issuerCreateAndStoreCredentialDef(
             walletHandle,
             issuerDid,
             readedSchema,
-            'TAG1',
+            tag,
             'CL',
             '{"support_revocation": false}'
         );
@@ -104,7 +103,7 @@ exports.createCredentialOffer = async(req, res, next) =>{
 
 exports.createMasterRequest = async (req, res, next) => {
     try {
-	 var body = req.body;
+	    const body = req.body;
         const walletHandle= body.walletHandle 
 
         const masterSecretId = await indy.proverCreateMasterSecret(
@@ -181,8 +180,6 @@ exports.createCredential = async(req, res, next)=>{
     var body = req.body;
     try {
 
-       
-
         if (!body.credReq) {
             throw new BadRequest('Credential Request is required');
         }
@@ -190,10 +187,14 @@ exports.createCredential = async(req, res, next)=>{
         if (!body.credOffer) {
             throw new BadRequest('Credential Offer is required');
         }
+        if (!body.credentials) {
+            throw new BadRequest('Credentials are required');
+        }
 
         const credOffer = body.credOffer
         const credReq = body.credReq
-        
+        const credentials = body.credentials
+
         const walletHandle = body.walletHandle 
     
         // ahora que el usuario A ya ha aceptado la oferta, 
@@ -201,13 +202,20 @@ exports.createCredential = async(req, res, next)=>{
 
         // credential values tiene que tener la misma informacion que nuestro schema
         // 'first_name', 'last_name', 'salary', 'employee_status', 'experience'
-        let credentialValues = {
-            "first_name": { "raw": "Jhon", "encoded": encoder.encodeCredValue("Jhon") },
-            "last_name": { "raw": "Doe", "encoded": encoder.encodeCredValue("Doe") },
-            "salary": { "raw": "20000", "encoded": encoder.encodeCredValue(20000) },
-            "employee_status": { "raw": "hired", "encoded": encoder.encodeCredValue("hired") },
-            "experience": { "raw": "2", "encoded": encoder.encodeCredValue(2) },
-        };
+        // let credentialValues = {
+        //     "first_name": { "raw": "Jhon", "encoded": encoder.encodeCredValue("Jhon") },
+        //     "last_name": { "raw": "Doe", "encoded": encoder.encodeCredValue("Doe") },
+        //     "salary": { "raw": "20000", "encoded": encoder.encodeCredValue(20000) },
+        //     "employee_status": { "raw": "hired", "encoded": encoder.encodeCredValue("hired") },
+        //     "experience": { "raw": "2", "encoded": encoder.encodeCredValue(2) },
+        // };
+        let credentialValues={}
+        for (const item in credentials) {
+            credentialValues[item]={
+                raw: credentials[item],
+                encoded: encoder.encodeCredValue(credentials[item])
+            }
+        }
         console.log("ISSUER: CREANDO CREDENCIAL CON LOS DATOS")
         console.log(JSON.stringify(credentialValues, null, 4));
         let [credentialData] = await indy.issuerCreateCredential(

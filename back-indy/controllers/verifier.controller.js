@@ -24,6 +24,9 @@ exports.createProofRequest = async (req, res, next) => {
         if (!body.attributes) {
             throw new BadRequest('Attributes are required');
         }
+        if (!body.predicates) {
+            throw new BadRequest('Predicates are required');
+        }
 
         const credDefId = body.credDefId
         const masterSecretId = body.masterSecretId
@@ -31,7 +34,8 @@ exports.createProofRequest = async (req, res, next) => {
         const nameOfRequest = body.name
 
         const attributes = body.attributes
-       
+        const predicates = body.predicates
+
         const poolHandle = await pool
 
         const walletHandle = body.walletHandle 
@@ -40,10 +44,11 @@ exports.createProofRequest = async (req, res, next) => {
         nonce = await indy.generateNonce();
         let proofRequest = {
             'nonce': nonce,
-            'name': 'Proof-Request',
+            'name': nameOfRequest,
             'version': '0.2',
             'ver': '1.0',
-            'requested_attributes':{
+            'requested_attributes': attributes,
+            /*{
                 'attr1_referent': {
                     'name': 'first_name',
                     'restrictions': [{ 'cred_def_id': credDefId }]
@@ -57,15 +62,15 @@ exports.createProofRequest = async (req, res, next) => {
                     'restrictions': [{ 'cred_def_id': credDefId }]
                 }
 
-            },
-            'requested_predicates': {
+            },*/
+            'requested_predicates': predicates //{
                 /*'predicate1_referent': {
                     'name': 'salary',
                     'p_type': '>=',
                     'p_value': 5000,
                     restrictions': [{ 'cred_def_id': credDefId }]
                 }*/
-            }
+            //}
         };
         
         console.log("VERIFIER: DATOS DEL PROOF REQUEST")
@@ -111,14 +116,21 @@ exports.verifiy = async (req, res, next) => {
         if (!body.name) {
             throw new BadRequest('Name of Proof Required');
         }
-        const credDefId = body.credDefId  
+        if (!body.predicates) {
+            throw new BadRequest('Predicates are required');
+        }
+        if (!body.attributes) {
+            throw new BadRequest('Attributes are required');
+        }
+
         const proofData = body.proofData
         const verifierDid = body.verifierDid
         const nameOfRequest  = body.name
         const nonce = body.nonce
         const poolHandle = await pool
         const attributes = body.attributes
-        
+        const predicates = body.predicates
+
         
         // una vez creada, se enviara la prueba al verifier para que la procese
         
@@ -132,32 +144,18 @@ exports.verifiy = async (req, res, next) => {
             //move to body params
         let proofRequest = {
             'nonce': nonce,
-            'name': 'Proof-Request',
+            'name': nameOfRequest,
             'version': '0.2',
             'ver': '1.0',
-            'requested_attributes': {
-                'attr1_referent': {
-                    'name': 'first_name',
-                    'restrictions': [{ 'cred_def_id': credDefId }]
-                },
-                'attr2_referent': {
-                    'name': 'last_name',
-                    'restrictions': [{ 'cred_def_id': credDefId }]
-                },
-                'attr3_referent': {
-                    'name': 'employee_status',
-                    'restrictions': [{ 'cred_def_id': credDefId }]
-                }
-
-            },/*attributes*/
-            'requested_predicates': {
+            'requested_attributes': attributes,
+            'requested_predicates': predicates//{
                 /*'predicate1_referent': {
                     'name': 'salary',
                     'p_type': '>=',
                     'p_value': 5000,
                     restrictions': [{ 'cred_def_id': credDefId }]
                 }*/
-            }
+            //}
         };
 
         const [schemasJson, credDefsJson, revocRefDefsJson, revocRegsJson] = await connection.verifierGetEntitiesFromLedger(

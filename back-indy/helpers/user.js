@@ -60,6 +60,10 @@ async function createWalletDid(name, pass) {
  * @returns 
  */
 async function buildProof(wh, did, poolHandle, proofRequest, masterSecretId) {
+    /***
+     * TODO
+     *  I need to manage the attributes here in this function...
+     */
     console.log("HOLDER: OBTENIENDO HANDLER DE BUSQUEDA")
     let searchHandler = await indy.proverSearchCredentialsForProofReq(
         wh,
@@ -67,6 +71,8 @@ async function buildProof(wh, did, poolHandle, proofRequest, masterSecretId) {
         null
     );
     console.log("HOLDER: BUSCANDO CREDENCIALES EN LA WALLET: ", searchHandler, wh)
+
+
     let credentials = undefined;
     let credForAttr1 = undefined;
     let credForAttr2 = undefined;
