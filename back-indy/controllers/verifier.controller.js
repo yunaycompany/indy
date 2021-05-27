@@ -9,7 +9,7 @@ exports.createProofRequest = async (req, res, next) => {
     var body = req.body;
     try {
         
-        if (!body.name) {credDefId
+        if (!body.name) {
             throw new BadRequest('Name of proof is required');
         }
         if (!body.credDefId) {
@@ -24,6 +24,9 @@ exports.createProofRequest = async (req, res, next) => {
         if (!body.attributes) {
             throw new BadRequest('Attributes are required');
         }
+        if (!body.predicates) {
+            throw new BadRequest('Predicates are required');
+        }
 
         const credDefId = body.credDefId
         const masterSecretId = body.masterSecretId
@@ -31,7 +34,8 @@ exports.createProofRequest = async (req, res, next) => {
         const nameOfRequest = body.name
 
         const attributes = body.attributes
-       
+        const predicates = body.predicates
+
         const poolHandle = await pool
 
         const walletHandle = body.walletHandle 
@@ -59,14 +63,14 @@ exports.createProofRequest = async (req, res, next) => {
                 }
 
             },*/
-            'requested_predicates': {
+            'requested_predicates': predicates //{
                 /*'predicate1_referent': {
                     'name': 'salary',
                     'p_type': '>=',
                     'p_value': 5000,
                     restrictions': [{ 'cred_def_id': credDefId }]
                 }*/
-            }
+            //}
         };
         
         console.log("VERIFIER: DATOS DEL PROOF REQUEST")
@@ -112,6 +116,12 @@ exports.verifiy = async (req, res, next) => {
         if (!body.name) {
             throw new BadRequest('Credential Definition ID is required');
         }
+        if (!body.predicates) {
+            throw new BadRequest('Predicates are required');
+        }
+        if (!body.attributes) {
+            throw new BadRequest('Attributes are required');
+        }
 
         const proofData = body.proofData
         const verifierDid = body.verifierDid
@@ -119,7 +129,8 @@ exports.verifiy = async (req, res, next) => {
         const nonce = body.nonce
         const poolHandle = await pool
         const attributes = body.attributes
-        
+        const predicates = body.predicates
+
         
         // una vez creada, se enviara la prueba al verifier para que la procese
         
@@ -137,14 +148,14 @@ exports.verifiy = async (req, res, next) => {
             'version': '0.2',
             'ver': '1.0',
             'requested_attributes': attributes,
-            'requested_predicates': {
+            'requested_predicates': predicates//{
                 /*'predicate1_referent': {
                     'name': 'salary',
                     'p_type': '>=',
                     'p_value': 5000,
                     restrictions': [{ 'cred_def_id': credDefId }]
                 }*/
-            }
+            //}
         };
 
         const [schemasJson, credDefsJson, revocRefDefsJson, revocRegsJson] = await connection.verifierGetEntitiesFromLedger(
